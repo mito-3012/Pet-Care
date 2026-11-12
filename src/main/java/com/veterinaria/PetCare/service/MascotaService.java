@@ -1,6 +1,7 @@
 package com.veterinaria.PetCare.service;
 
 import com.veterinaria.PetCare.entity.Mascota;
+import com.veterinaria.PetCare.repository.DuenoRepository;
 import com.veterinaria.PetCare.repository.MascotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

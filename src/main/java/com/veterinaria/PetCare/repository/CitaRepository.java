@@ -1,4 +1,12 @@
 package com.veterinaria.PetCare.repository;
 
-public interface CitaRepository {
+import com.veterinaria.PetCare.entity.Cita;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface CitaRepository extends JpaRepository<Cita, Long> {
+    List<Cita> findByMascotaId(Long mascotaId);
 }
