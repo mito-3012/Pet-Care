@@ -31,4 +31,15 @@ public class MascotaController {
     public List<Cita> getCitasByMascota(@PathVariable Long id) {
         return citaService.getByMascotaId(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        mascotaService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public Mascota update(@PathVariable Long id, @RequestBody Mascota mascota) {
+        mascota.setId(id);
+        return mascotaService.save(mascota);
+    }
 }

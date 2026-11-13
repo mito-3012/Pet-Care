@@ -31,5 +31,17 @@ public class DuenoController {
     public List<Mascota> getMascotasByDueno(@PathVariable Long id) {
         return mascotaService.getByDuenoId(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        duenoService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public Dueno update(@PathVariable Long id, @RequestBody Dueno dueno) {
+        dueno.setId(id);
+        return duenoService.save(dueno);
+    }
 }
+
 

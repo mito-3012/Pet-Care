@@ -29,4 +29,6 @@ public class DuenoService {
     public void delete(Long id) {
         duenoRepository.deleteById(id);
     }
+
+
 }
