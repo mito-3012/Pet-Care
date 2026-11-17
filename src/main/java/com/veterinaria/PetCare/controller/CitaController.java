@@ -2,7 +2,7 @@ package com.veterinaria.PetCare.controller;
 
 import com.veterinaria.PetCare.entity.Cita;
 import com.veterinaria.PetCare.service.CitaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +11,21 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/citas")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:5173") // Ajustado al puerto de Vite (React)
 public class CitaController {
 
-    @Autowired
-    private CitaService citaService;
+    private final CitaService citaService;
+
+    // Inyección de dependencias por constructor (Recomendado sobre @Autowired en atributos)
+    public CitaController(CitaService citaService) {
+        this.citaService = citaService;
+    }
 
     // Obtener todas las citas
     @GetMapping
-    public List<Cita> getAll() {
-        return citaService.getAll();
+    public ResponseEntity<List<Cita>> getAll() {
+        List<Cita> citas = citaService.getAll();
+        return ResponseEntity.ok(citas);
     }
 
     // Obtener una cita por su ID
@@ -33,11 +38,12 @@ public class CitaController {
 
     // Crear una nueva cita
     @PostMapping
-    public Cita create(@RequestBody Cita cita) {
-        return citaService.save(cita);
+    public ResponseEntity<Cita> create(@RequestBody Cita cita) {
+        Cita nuevaCita = citaService.save(cita);
+        return new ResponseEntity<>(nuevaCita, HttpStatus.CREATED); // Devuelve 201 Created
     }
 
-    // Actualizar una cita existente (NUEVO)
+    // Actualizar una cita existente
     @PutMapping("/{id}")
     public ResponseEntity<Cita> update(@PathVariable Long id, @RequestBody Cita cita) {
         try {
@@ -53,7 +59,7 @@ public class CitaController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             citaService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // Devuelve 204 No Content
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -61,7 +67,11 @@ public class CitaController {
 
     // Obtener citas por ID de la mascota
     @GetMapping("/mascota/{mascotaId}")
-    public List<Cita> getCitasByMascota(@PathVariable Long mascotaId) {
-        return citaService.getByMascotaId(mascotaId);
+    public ResponseEntity<List<Cita>> getCitasByMascota(@PathVariable Long mascotaId) {
+        List<Cita> citas = citaService.getByMascotaId(mascotaId);
+        if (citas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(citas);
     }
 }
